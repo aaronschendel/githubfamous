@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using GithubFamous.Services;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace GithubFamous
 {
@@ -18,9 +14,12 @@ namespace GithubFamous
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .ConfigureServices(serviceCollection =>
+                    serviceCollection.AddScoped<IGithubApi, GithubApi>())
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
                 });
+       
     }
 }

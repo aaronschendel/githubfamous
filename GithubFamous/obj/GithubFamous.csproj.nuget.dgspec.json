@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Volumes/GDrive_SP/aschen/Projects/GithubFamous/GithubFamous/GithubFamous.csproj": {}
+    "/Volumes/GDrive_SP/aschen/Sites/githubfamous/GithubFamous/GithubFamous.csproj": {}
   },
   "projects": {
-    "/Volumes/GDrive_SP/aschen/Projects/GithubFamous/GithubFamous/GithubFamous.csproj": {
+    "/Volumes/GDrive_SP/aschen/Sites/githubfamous/GithubFamous/GithubFamous.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Volumes/GDrive_SP/aschen/Projects/GithubFamous/GithubFamous/GithubFamous.csproj",
+        "projectUniqueName": "/Volumes/GDrive_SP/aschen/Sites/githubfamous/GithubFamous/GithubFamous.csproj",
         "projectName": "GithubFamous",
-        "projectPath": "/Volumes/GDrive_SP/aschen/Projects/GithubFamous/GithubFamous/GithubFamous.csproj",
+        "projectPath": "/Volumes/GDrive_SP/aschen/Sites/githubfamous/GithubFamous/GithubFamous.csproj",
         "packagesPath": "/Volumes/GDrive_SP/aschen/.nuget/packages/",
-        "outputPath": "/Volumes/GDrive_SP/aschen/Projects/GithubFamous/GithubFamous/obj/",
+        "outputPath": "/Volumes/GDrive_SP/aschen/Sites/githubfamous/GithubFamous/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Volumes/GDrive_SP/aschen/.config/NuGet/NuGet.Config"
@@ -37,6 +37,16 @@
       "frameworks": {
         "netcoreapp3.1": {
           "targetAlias": "netcoreapp3.1",
+          "dependencies": {
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.1, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[6.2.3, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Volumes/GDrive_SP/aschen/Projects/GithubFamous/GithubFamous.Tests/GithubFamous.Tests.csproj": {}
+    "/Volumes/GDrive_SP/aschen/Sites/githubfamous/GithubFamous.Tests/GithubFamous.Tests.csproj": {}
   },
   "projects": {
-    "/Volumes/GDrive_SP/aschen/Projects/GithubFamous/GithubFamous.Tests/GithubFamous.Tests.csproj": {
+    "/Volumes/GDrive_SP/aschen/Sites/githubfamous/GithubFamous.Tests/GithubFamous.Tests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Volumes/GDrive_SP/aschen/Projects/GithubFamous/GithubFamous.Tests/GithubFamous.Tests.csproj",
+        "projectUniqueName": "/Volumes/GDrive_SP/aschen/Sites/githubfamous/GithubFamous.Tests/GithubFamous.Tests.csproj",
         "projectName": "GithubFamous.Tests",
-        "projectPath": "/Volumes/GDrive_SP/aschen/Projects/GithubFamous/GithubFamous.Tests/GithubFamous.Tests.csproj",
+        "projectPath": "/Volumes/GDrive_SP/aschen/Sites/githubfamous/GithubFamous.Tests/GithubFamous.Tests.csproj",
         "packagesPath": "/Volumes/GDrive_SP/aschen/.nuget/packages/",
-        "outputPath": "/Volumes/GDrive_SP/aschen/Projects/GithubFamous/GithubFamous.Tests/obj/",
+        "outputPath": "/Volumes/GDrive_SP/aschen/Sites/githubfamous/GithubFamous.Tests/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Volumes/GDrive_SP/aschen/.config/NuGet/NuGet.Config"
@@ -25,7 +25,11 @@
         "frameworks": {
           "netcoreapp3.1": {
             "targetAlias": "netcoreapp3.1",
-            "projectReferences": {}
+            "projectReferences": {
+              "/Volumes/GDrive_SP/aschen/Sites/githubfamous/GithubFamous/GithubFamous.csproj": {
+                "projectPath": "/Volumes/GDrive_SP/aschen/Sites/githubfamous/GithubFamous/GithubFamous.csproj"
+              }
+            }
           }
         },
         "warningProperties": {
@@ -38,6 +42,10 @@
         "netcoreapp3.1": {
           "targetAlias": "netcoreapp3.1",
           "dependencies": {
+            "FluentAssertions": {
+              "target": "Package",
+              "version": "[6.2.0, )"
+            },
             "Microsoft.NET.Test.Sdk": {
               "target": "Package",
               "version": "[16.5.0, )"
@@ -66,6 +74,71 @@
           "assetTargetFallback": true,
           "warn": true,
           "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/5.0.404/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Volumes/GDrive_SP/aschen/Sites/githubfamous/GithubFamous/GithubFamous.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Volumes/GDrive_SP/aschen/Sites/githubfamous/GithubFamous/GithubFamous.csproj",
+        "projectName": "GithubFamous",
+        "projectPath": "/Volumes/GDrive_SP/aschen/Sites/githubfamous/GithubFamous/GithubFamous.csproj",
+        "packagesPath": "/Volumes/GDrive_SP/aschen/.nuget/packages/",
+        "outputPath": "/Volumes/GDrive_SP/aschen/Sites/githubfamous/GithubFamous/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Volumes/GDrive_SP/aschen/.config/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "targetAlias": "netcoreapp3.1",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "targetAlias": "netcoreapp3.1",
+          "dependencies": {
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.1, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[6.2.3, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
