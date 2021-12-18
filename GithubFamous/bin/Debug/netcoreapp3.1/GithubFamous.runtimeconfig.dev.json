@@ -1,8 +1,0 @@
-{
-  "runtimeOptions": {
-    "additionalProbingPaths": [
-      "/Volumes/GDrive_SP/aschen/.dotnet/store/|arch|/|tfm|",
-      "/Volumes/GDrive_SP/aschen/.nuget/packages"
-    ]
-  }
-}
