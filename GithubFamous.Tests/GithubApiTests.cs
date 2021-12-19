@@ -18,7 +18,7 @@ namespace GithubFamous.Tests.Services
     public class GithubApiTests
     {
         private SearchResponse _searchResponse;
-        private ILogger<GithubApi> _logger;
+        private readonly ILogger<GithubApi> _logger;
 
         public GithubApiTests()
         {
