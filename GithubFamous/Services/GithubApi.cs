@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -29,7 +28,7 @@ namespace GithubFamous.Services
                 _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(githubAcceptHeader));
                 _client.DefaultRequestHeaders.UserAgent.TryParseAdd("request");
 
-                string queryParams = $"q=langasdfasdfuage:{programmingLanguage}&sort=stars&order=desc";
+                string queryParams = $"q=language:{programmingLanguage}&sort=stars&order=desc&per_page={resultLimit}";
 
                 var response = await _client.GetAsync($"?{queryParams}");
 
@@ -38,13 +37,11 @@ namespace GithubFamous.Services
                     var stringJson = await response.Content.ReadAsStringAsync();
                     JObject fullResponseJson = JObject.Parse(stringJson);
                     List<Repository> repositoriesFromResponse = JsonConvert.DeserializeObject<List<Repository>>(fullResponseJson["items"].ToString());
-                    var result = repositoriesFromResponse.GetRange(0, resultLimit);
-                    return result;
+                    return repositoriesFromResponse;
                 }
-                else
-                {
-                    return null;
-                }
+                
+                return null;
+                
             }
             catch (Exception)
             {

@@ -24,6 +24,5 @@ namespace GithubFamous
                 {
                     webBuilder.UseStartup<Startup>();
                 });
-       
     }
 }

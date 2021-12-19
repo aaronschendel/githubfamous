@@ -26,19 +26,19 @@ namespace GithubFamous.Controllers
         /// Gets a list of Github repositories ordered by number of stars descending in the programming language entered by the user
         /// </summary>
         /// <param name="programmingLanguage">The programming language the returned respositories are written in. A list of valid languages <a href="https://github.com/search/advanced">can be found here.</a></param>
-        /// <param name="resultLimit">Desired number of results. Max = 100 </param>
+        /// <param name="resultLimit">Optional, default = 5. Desired number of results - must be between 1 and 100. </param>
         /// <returns>A list of Github repository objects ordered by most stars to least</returns>
         [HttpGet,
             ProducesResponseType(StatusCodes.Status200OK),
             ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<List<Repository>>> Get([FromQuery] string programmingLanguage, [FromQuery] int resultLimit)
+        public async Task<ActionResult<List<Repository>>> Get([FromQuery] string programmingLanguage, [FromQuery] int? resultLimit = null)
         {
             if (string.IsNullOrWhiteSpace(programmingLanguage))
             {
                 this.ModelState.AddModelError(nameof(programmingLanguage), "ProgrammingLanguage cannot be null or empty.");
             }
 
-            if (resultLimit < 1 || resultLimit > 100)
+            if (resultLimit != null && (resultLimit < 1 || resultLimit > 100))
             {
                 this.ModelState.AddModelError(nameof(resultLimit), "ResultLimit must be between 1 and 100.");
             }
@@ -48,7 +48,7 @@ namespace GithubFamous.Controllers
                 return this.ValidationProblem(this.ModelState);
             }
 
-            var result = await _githubApi.GetMostStarredRepositories(programmingLanguage, resultLimit);
+            var result = await _githubApi.GetMostStarredRepositories(programmingLanguage, resultLimit ?? 5);
 
             if (result == null)
             {
