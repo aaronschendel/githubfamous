@@ -49,7 +49,7 @@ namespace GithubFamous.Services
             }
             catch (Exception e)
             {
-                _logger.LogError("GetMostStarredRepositories: Exception Occurred", e);
+                _logger.LogError("GetMostStarredRepositories: Exception Occurred.", e);
                 return null;
             }
         }
