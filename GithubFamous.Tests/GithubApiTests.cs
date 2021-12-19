@@ -11,15 +11,18 @@ using Moq.Protected;
 using System.Threading;
 using Newtonsoft.Json;
 using GithubFamous.Tests.Models;
+using Microsoft.Extensions.Logging;
 
 namespace GithubFamous.Tests.Services
 {
     public class GithubApiTests
     {
         private SearchResponse _searchResponse;
+        private ILogger<GithubApi> _logger;
 
         public GithubApiTests()
         {
+            _logger = Mock.Of<ILogger<GithubApi>>();
             _searchResponse = new SearchResponse()
             {
                 total_count = 5,
@@ -49,18 +52,13 @@ namespace GithubFamous.Tests.Services
                     {
                         Id = 5,
                         Stargazers_Count = 125
-                    },
-                    new Repository
-                    {
-                        Id = 6,
-                        Stargazers_Count = 150
                     }
                 }
             };
         }
 
         [Fact]
-        public async void GithubApi_GetMostStarredRepositories_Returns_FiveRepos_When_LimitIsFive()
+        public async void GithubApi_GetMostStarredRepositories_Returns_Repos_When_AllIsWell()
         {
             // Arrange
             var mockMessageHandler = new Mock<HttpMessageHandler>();
@@ -71,7 +69,7 @@ namespace GithubFamous.Tests.Services
                     StatusCode = HttpStatusCode.OK,
                     Content = new StringContent(JsonConvert.SerializeObject(_searchResponse))
                 });
-            GithubApi api = new GithubApi(new HttpClient(mockMessageHandler.Object));
+            GithubApi api = new GithubApi(new HttpClient(mockMessageHandler.Object), _logger);
 
             // Act
             var result = await api.GetMostStarredRepositories("python", 5);
@@ -91,7 +89,7 @@ namespace GithubFamous.Tests.Services
                 {
                     StatusCode = HttpStatusCode.NotFound
                 });
-            GithubApi api = new GithubApi(new HttpClient(mockMessageHandler.Object));
+            GithubApi api = new GithubApi(new HttpClient(mockMessageHandler.Object), _logger);
 
             // Act
             var result = await api.GetMostStarredRepositories("python", 5);
@@ -108,7 +106,7 @@ namespace GithubFamous.Tests.Services
             mockMessageHandler.Protected()
                 .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
                 .ThrowsAsync(new System.Exception());
-            GithubApi api = new GithubApi(new HttpClient(mockMessageHandler.Object));
+            GithubApi api = new GithubApi(new HttpClient(mockMessageHandler.Object), _logger);
 
             // Act
             var result = await api.GetMostStarredRepositories("python", 5);
