@@ -3,62 +3,118 @@ using GithubFamous.Models.Github;
 using GithubFamous.Services;
 using Xunit;
 using FluentAssertions;
-using System.Linq;
+using Moq;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Net;
+using Moq.Protected;
+using System.Threading;
+using Newtonsoft.Json;
+using GithubFamous.Tests.Models;
 
-namespace GithubFamous.Tests
+namespace GithubFamous.Tests.Services
 {
     public class GithubApiTests
     {
+        private SearchResponse _searchResponse;
 
         public GithubApiTests()
         {
-            List<Repository> reposList = new List<Repository>
+            _searchResponse = new SearchResponse()
             {
-                new Repository
-                {
-                    Id = 1,
-                    Stargazers_Count = 25
-                },
-                new Repository
-                {
-                    Id = 2,
-                    Stargazers_Count = 50
-                },
-                new Repository
-                {
-                    Id = 3,
-                    Stargazers_Count = 75
-                },
-                new Repository
-                {
-                    Id = 4,
-                    Stargazers_Count = 100
-                },
-                new Repository
-                {
-                    Id = 5,
-                    Stargazers_Count = 125
-                },
-                new Repository
-                {
-                    Id = 6,
-                    Stargazers_Count = 150
+                total_count = 5,
+                incomplete_results = false,
+                items = new List<Repository> {
+                    new Repository
+                    {
+                        Id = 1,
+                        Stargazers_Count = 25
+                    },
+                    new Repository
+                    {
+                        Id = 2,
+                        Stargazers_Count = 50
+                    },
+                    new Repository
+                    {
+                        Id = 3,
+                        Stargazers_Count = 75
+                    },
+                    new Repository
+                    {
+                        Id = 4,
+                        Stargazers_Count = 100
+                    },
+                    new Repository
+                    {
+                        Id = 5,
+                        Stargazers_Count = 125
+                    },
+                    new Repository
+                    {
+                        Id = 6,
+                        Stargazers_Count = 150
+                    }
                 }
             };
         }
 
         [Fact]
-        public async void GithubApi_GetMostStarredRepo_Returns_MostStarredRepos_WhenAllIsWell()
+        public async void GithubApi_GetMostStarredRepositories_Returns_FiveRepos_When_LimitIsFive()
         {
-            GithubApi api = new GithubApi();
+            // Arrange
+            var mockMessageHandler = new Mock<HttpMessageHandler>();
+            mockMessageHandler.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(new HttpResponseMessage
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Content = new StringContent(JsonConvert.SerializeObject(_searchResponse))
+                });
+            GithubApi api = new GithubApi(new HttpClient(mockMessageHandler.Object));
+
+            // Act
             var result = await api.GetMostStarredRepositories("python", 5);
+
+            // Assert
             result.Count.Should().Be(5);
-            result[0].Id.Should().Be(6);
-            result[1].Id.Should().Be(5);
-            result[2].Id.Should().Be(4);
-            result[3].Id.Should().Be(3);
-            result[4].Id.Should().Be(2);
-            result.FirstOrDefault(x => x.Id == 1).Should().BeNull();
+        }
+
+        [Fact]
+        public async void GithubApi_GetMostStarredRepositories_Returns_Null_When_CallToGithubIsNotSuccessful()
+        {
+            // Arrange
+            var mockMessageHandler = new Mock<HttpMessageHandler>();
+            mockMessageHandler.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(new HttpResponseMessage
+                {
+                    StatusCode = HttpStatusCode.NotFound
+                });
+            GithubApi api = new GithubApi(new HttpClient(mockMessageHandler.Object));
+
+            // Act
+            var result = await api.GetMostStarredRepositories("python", 5);
+
+            // Assert
+            result.Should().BeNull();
+        }
+
+        [Fact]
+        public async void GithubApi_GetMostStarredRepositories_Returns_Null_When_ExceptionOccurs()
+        {
+            // Arrange
+            var mockMessageHandler = new Mock<HttpMessageHandler>();
+            mockMessageHandler.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .ThrowsAsync(new System.Exception());
+            GithubApi api = new GithubApi(new HttpClient(mockMessageHandler.Object));
+
+            // Act
+            var result = await api.GetMostStarredRepositories("python", 5);
+
+            // Assert
+            result.Should().BeNull();
         }
     }
 }

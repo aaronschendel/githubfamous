@@ -1,5 +1,8 @@
-﻿using System.Net.Mime;
+﻿using System.Collections.Generic;
+using System.Net;
+using System.Net.Mime;
 using System.Threading.Tasks;
+using GithubFamous.Models.Github;
 using GithubFamous.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -28,21 +31,42 @@ namespace GithubFamous.Controllers
         [HttpGet,
             ProducesResponseType(StatusCodes.Status200OK),
             ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Get([FromQuery] string programmingLanguage, [FromQuery] int resultLimit)
+        public async Task<ActionResult<List<Repository>>> Get([FromQuery] string programmingLanguage, [FromQuery] int resultLimit)
         {
-            return new JsonResult(await _githubApi.GetMostStarredRepositories(programmingLanguage, resultLimit));
+            if (string.IsNullOrWhiteSpace(programmingLanguage))
+            {
+                this.ModelState.AddModelError(nameof(programmingLanguage), "ProgrammingLanguage cannot be null or empty.");
+            }
 
-            //return new BadRequestObjectResult(new ProblemDetails()
-            //{
-            //    Detail = "",
-            //    Title = "",
-            //    Status = (int) HttpStatusCode.BadRequest,
-            //    Type = ""
-            //});
+            if (resultLimit < 1 || resultLimit > 100)
+            {
+                this.ModelState.AddModelError(nameof(resultLimit), "ResultLimit must be between 1 and 100.");
+            }
+
+            if (!this.ModelState.IsValid)
+            {
+                return this.ValidationProblem(this.ModelState);
+            }
+
+            var result = await _githubApi.GetMostStarredRepositories(programmingLanguage, resultLimit);
+
+            if (result == null)
+            {
+                var problemDetails = new ProblemDetails()
+                {
+                    Detail = "Unexpected problem occurred, please try again later.",
+                    Title = "Internal Server Error",
+                    Status = (int)HttpStatusCode.InternalServerError,
+                    Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.6.1"
+                };
+
+                return new JsonResult(problemDetails)
+                {
+                    StatusCode = 500
+                };
+            }
+
+            return new JsonResult(result);
         }
     }
 }
-
-
-
-// Build a Web Service that calls GitHub's API and returns the top 5 starred repos for a user-supplied language.
